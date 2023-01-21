@@ -9,7 +9,7 @@ resource "aws_placement_group" "pg" {
 
 module "spot_requests" {
   source  = "frgrisk/ec2-spot/aws"
-  version = "0.1.0"
+  version = "~>0.2.0"
 
   for_each = var.spot_requests
 
@@ -29,6 +29,7 @@ module "spot_requests" {
   raid_array_size    = lookup(each.value, "raid_array_size", 0)
   root_volume_size   = lookup(each.value, "root_volume_size", 30)
   additional_volumes = lookup(var.additional_volumes, each.key, {})
+  encrypt_volumes    = var.encrypt_volumes
 
   user_data_replace_on_change = lookup(each.value, "user_data_replace_on_change", true)
 }
