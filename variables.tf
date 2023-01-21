@@ -1,6 +1,17 @@
 variable "spot_requests" {
   description = "Map of spot requests to spot instance variables"
-  type        = map(map(any))
+  type = map(object({
+    availability_zone           = optional(string)
+    type                        = string
+    hostname                    = optional(string)
+    ami                         = string
+    iam_instance_profile        = optional(string)
+    raid_array_size             = optional(number)
+    root_volume_size            = optional(number)
+    security_group_ids          = list(string)
+    user_data                   = optional(string)
+    user_data_replace_on_change = optional(bool)
+  }))
 }
 
 variable "tag_environment" {
