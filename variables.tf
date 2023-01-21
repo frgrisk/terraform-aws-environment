@@ -50,3 +50,13 @@ variable "additional_volumes" {
   type        = map(map(map(string)))
   default     = {}
 }
+
+variable "public_route_table_id" {
+  description = "Public route table ID to associate with new public subnets"
+  type        = string
+}
+
+variable "private_route_table_id" {
+  description = "Private route table ID to associate with new private subnets"
+  type        = string
+}
