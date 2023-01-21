@@ -14,7 +14,7 @@ module "spot_requests" {
   for_each = var.spot_requests
 
   ami                  = each.value["ami"]
-  hostname             = "${each.key}-${var.tag_environment}.${var.route53_zone_name}"
+  hostname             = lookup(each.value, "hostname", "${each.key}-${var.tag_environment}.${var.route53_zone_name}")
   iam_instance_profile = lookup(each.value, "iam_instance_profile", null)
   key_name             = var.key_name
   placement_group_name = aws_placement_group.pg.name
