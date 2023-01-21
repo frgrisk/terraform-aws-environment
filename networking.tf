@@ -6,8 +6,8 @@ locals {
       for i in range(0, local.number_of_subnets) : ceil(log(local.number_of_subnets, 2))
     ]...
   )
-  private_subnets = slice(local.all_subnets, 0, local.number_of_subnets / 2)
-  public_subnets  = slice(local.all_subnets, local.number_of_subnets / 2, local.number_of_subnets)
+  private_subnet_cidrs = slice(local.all_subnets, 0, local.number_of_subnets / 2)
+  public_subnet_cidrs  = slice(local.all_subnets, local.number_of_subnets / 2, local.number_of_subnets)
 }
 
 data "aws_region" "current" {}
@@ -31,7 +31,7 @@ resource "aws_subnet" "private" {
     Environment = var.tag_environment
   }
   vpc_id            = var.vpc_id
-  cidr_block        = local.private_subnets[index(data.aws_availability_zones.region.names, each.key)]
+  cidr_block        = local.private_subnet_cidrs[index(data.aws_availability_zones.region.names, each.key)]
   availability_zone = each.key
 }
 
@@ -42,8 +42,22 @@ resource "aws_subnet" "public" {
     Environment = var.tag_environment
   }
   vpc_id            = var.vpc_id
-  cidr_block        = local.public_subnets[index(data.aws_availability_zones.region.names, each.key)]
+  cidr_block        = local.public_subnet_cidrs[index(data.aws_availability_zones.region.names, each.key)]
   availability_zone = each.key
+}
+
+resource "aws_route_table_association" "private" {
+  for_each = aws_subnet.private
+
+  route_table_id = var.private_route_table_id
+  subnet_id      = each.value.id
+}
+
+resource "aws_route_table_association" "public" {
+  for_each = aws_subnet.public
+
+  route_table_id = var.public_route_table_id
+  subnet_id      = each.value.id
 }
 
 module "inter_environment_traffic" {
