@@ -60,3 +60,9 @@ variable "private_route_table_id" {
   description = "Private route table ID to associate with new private subnets"
   type        = string
 }
+
+variable "encrypt_volumes" {
+  description = "Flag to enable encryption of volumes"
+  type        = bool
+  default     = true
+}
