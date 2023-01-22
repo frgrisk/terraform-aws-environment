@@ -11,17 +11,12 @@ variable "spot_requests" {
     security_group_ids          = list(string)
     user_data                   = optional(string)
     user_data_replace_on_change = optional(bool)
+    placement_group             = optional(string)
   }))
 }
 
 variable "tag_environment" {
   description = "The name of the environment to use in resource tagging"
-  type        = string
-}
-
-variable "placement_group_name" {
-  description = "The name of the placement group to create"
-  default     = ""
   type        = string
 }
 
