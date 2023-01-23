@@ -12,7 +12,14 @@ variable "spot_requests" {
     user_data                   = optional(string)
     user_data_replace_on_change = optional(bool)
     placement_group             = optional(string)
+    additional_tags             = optional(map(string))
   }))
+}
+
+variable "default_tags" {
+  description = "Default tags to apply to all resources"
+  type        = map(string)
+  default     = {}
 }
 
 variable "tag_environment" {

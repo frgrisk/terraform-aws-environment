@@ -3,8 +3,8 @@ locals {
 }
 
 module "spot_requests" {
-  source  = "frgrisk/ec2-spot/aws"
-  version = "~>0.3.0"
+  source = "frgrisk/ec2-spot/aws"
+  version = "~>0.3.2"
 
   for_each = var.spot_requests
 
@@ -25,6 +25,7 @@ module "spot_requests" {
   root_volume_size   = coalesce(each.value.root_volume_size, 30)
   additional_volumes = lookup(var.additional_volumes, each.key, {})
   encrypt_volumes    = var.encrypt_volumes
+  additional_tags    = merge(var.default_tags, each.value.additional_tags)
 
   user_data_replace_on_change = coalesce(each.value.user_data_replace_on_change, true)
 }
