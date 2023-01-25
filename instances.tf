@@ -3,7 +3,7 @@ locals {
 }
 
 module "spot_requests" {
-  source = "frgrisk/ec2-spot/aws"
+  source  = "frgrisk/ec2-spot/aws"
   version = "~>0.3.2"
 
   for_each = var.spot_requests
