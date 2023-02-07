@@ -1,12 +1,8 @@
-locals {
-  default_az = coalesce(var.default_availability_zone, data.aws_availability_zones.region.names[0])
-}
+module "on_demand_requests" {
+  source  = "frgrisk/ec2-instance/aws"
+  version = "0.2.1"
 
-module "spot_requests" {
-  source  = "frgrisk/ec2-spot/aws"
-  version = "~>0.3.2"
-
-  for_each = var.spot_requests
+  for_each = var.on_demand_requests
 
   ami                  = each.value.ami
   hostname             = coalesce(each.value.hostname, "${each.key}-${var.tag_environment}.${var.route53_zone_name}")
@@ -30,11 +26,11 @@ module "spot_requests" {
   user_data_replace_on_change = coalesce(each.value.user_data_replace_on_change, true)
 }
 
-resource "aws_route53_record" "instances" {
-  for_each = var.spot_requests
+resource "aws_route53_record" "on_demand_requests" {
+  for_each = var.on_demand_requests
   zone_id  = var.route53_zone_id
-  name     = module.spot_requests[each.key].hostname
+  name     = module.on_demand_requests[each.key].hostname
   type     = "A"
-  records  = [module.spot_requests[each.key].private_ip]
+  records  = [module.on_demand_requests[each.key].private_ip]
   ttl      = "60"
 }
