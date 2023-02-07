@@ -1,6 +1,6 @@
 module "on_demand_requests" {
   source  = "frgrisk/ec2-instance/aws"
-  version = "0.1.0"
+  version = "0.2.1"
 
   for_each = var.on_demand_requests
 
