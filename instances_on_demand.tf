@@ -27,7 +27,7 @@ module "on_demand_requests" {
 }
 
 resource "aws_route53_record" "on_demand_requests" {
-  for_each = var.spot_requests
+  for_each = var.on_demand_requests
   zone_id  = var.route53_zone_id
   name     = module.on_demand_requests[each.key].hostname
   type     = "A"
