@@ -14,6 +14,7 @@ variable "spot_requests" {
     placement_group             = optional(string)
     additional_tags             = optional(map(string))
   }))
+  default = {}
 }
 
 variable "on_demand_requests" {
@@ -32,6 +33,7 @@ variable "on_demand_requests" {
     placement_group             = optional(string)
     additional_tags             = optional(map(string))
   }))
+  default = {}
 }
 
 variable "default_tags" {
