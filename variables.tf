@@ -16,6 +16,24 @@ variable "spot_requests" {
   }))
 }
 
+variable "on_demand_requests" {
+  description = "Map of on-demand requests to on-demand instance variables"
+  type = map(object({
+    availability_zone           = optional(string)
+    type                        = string
+    hostname                    = optional(string)
+    ami                         = string
+    iam_instance_profile        = optional(string)
+    raid_array_size             = optional(number)
+    root_volume_size            = optional(number)
+    security_group_ids          = list(string)
+    user_data                   = optional(string)
+    user_data_replace_on_change = optional(bool)
+    placement_group             = optional(string)
+    additional_tags             = optional(map(string))
+  }))
+}
+
 variable "default_tags" {
   description = "Default tags to apply to all resources"
   type        = map(string)
