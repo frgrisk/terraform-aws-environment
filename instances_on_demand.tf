@@ -1,4 +1,4 @@
-module "ec2-instance" {
+module "on_demand_requests" {
   source  = "frgrisk/ec2-instance/aws"
   version = "0.1.0"
 
@@ -29,8 +29,8 @@ module "ec2-instance" {
 resource "aws_route53_record" "on_demand_requests" {
   for_each = var.spot_requests
   zone_id  = var.route53_zone_id
-  name     = module.spot_requests[each.key].hostname
+  name     = module.on_demand_requests[each.key].hostname
   type     = "A"
-  records  = [module.spot_requests[each.key].private_ip]
+  records  = [module.on_demand_requests[each.key].private_ip]
   ttl      = "60"
 }
