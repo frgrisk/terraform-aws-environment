@@ -36,6 +36,28 @@ variable "on_demand_requests" {
   default = {}
 }
 
+variable "backup" {
+  description = "Map of backup variables"
+  type = object({
+    enabled   = bool
+    schedule  = optional(string)
+    retention = optional(number)
+  })
+  default = {
+    enabled = false
+  }
+
+  validation {
+    condition     = var.backup.enabled == true ? var.backup.schedule != null && var.backup.retention != null : true
+    error_message = "If backup is enabled, schedule and retention must be set"
+  }
+
+  validation {
+    condition     = var.backup.enabled == false ? var.backup.schedule == null && var.backup.retention == null : true
+    error_message = "If backup is disabled, schedule and retention must be null"
+  }
+}
+
 variable "default_tags" {
   description = "Default tags to apply to all resources"
   type        = map(string)
