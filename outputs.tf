@@ -32,3 +32,23 @@ output "inter_environment_security_group_id" {
   description = "ID of the inter-environment security group"
   value       = module.inter_environment_traffic.security_group_id
 }
+
+output "private_ip_addresses_on_demand" {
+    description = "List of private IP addresses allocated to on-demand instances"
+    value       = {for name, instance in module.on_demand_requests : name => instance.private_ip}
+}
+
+output "private_ip_addresses_spot" {
+    description = "List of private IP addresses allocated to spot instances"
+    value       = {for name, instance in module.spot_requests : name => instance.private_ip}
+}
+
+output "instance_ids_on_demand" {
+    description = "List of instance IDs for on-demand instances"
+    value       = {for name, instance in module.on_demand_requests : name => instance.instance_id}
+}
+
+output "instance_ids_spot" {
+    description = "List of instance IDs for spot instances"
+    value       = {for name, instance in module.spot_requests : name => instance.instance_id}
+}
