@@ -13,7 +13,7 @@ module "on_demand_requests" {
     each.value.security_group_ids,
     [module.inter_environment_traffic.security_group_id],
   )
-  subnet_id          = aws_subnet.private[coalesce(each.value.availability_zone, local.default_az)].id
+  subnet_id          = each.value.subnet_type == "public" ? aws_subnet.public[coalesce(each.value.availability_zone, local.default_az)].id : aws_subnet.private[coalesce(each.value.availability_zone, local.default_az)].id
   tag_environment    = var.tag_environment
   type               = each.value.type
   user_data          = each.value.user_data
@@ -26,11 +26,28 @@ module "on_demand_requests" {
   user_data_replace_on_change = coalesce(each.value.user_data_replace_on_change, true)
 }
 
+resource "aws_eip" "on_demand_requests" {
+  for_each = { for name, instance in var.on_demand_requests : name => coalesce(instance.hostname, "${name}-${var.tag_environment}.${var.route53_zone_name}") if instance.subnet_type == "public" }
+
+  tags = {
+    Environment : var.tag_environment,
+    Hostname : each.value,
+    Name : each.value,
+  }
+}
+
+resource "aws_eip_association" "on_demand_requests" {
+  for_each = { for name, instance in var.on_demand_requests : name => module.on_demand_requests[name] if instance.subnet_type == "public" }
+
+  instance_id   = each.value.instance_id
+  allocation_id = aws_eip.on_demand_requests[each.key].id
+}
+
 resource "aws_route53_record" "on_demand_requests" {
   for_each = var.on_demand_requests
   zone_id  = var.route53_zone_id
   name     = module.on_demand_requests[each.key].hostname
   type     = "A"
-  records  = [module.on_demand_requests[each.key].private_ip]
+  records  = [each.value.subnet_type == "public" ? aws_eip.on_demand_requests[each.key].public_ip : module.on_demand_requests[each.key].private_ip]
   ttl      = "60"
 }

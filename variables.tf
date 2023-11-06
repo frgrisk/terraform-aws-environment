@@ -13,6 +13,7 @@ variable "spot_requests" {
     user_data_replace_on_change = optional(bool)
     placement_group             = optional(string)
     additional_tags             = optional(map(string))
+    subnet_type                 = optional(string)
   }))
   default = {}
 }
@@ -32,6 +33,7 @@ variable "on_demand_requests" {
     user_data_replace_on_change = optional(bool)
     placement_group             = optional(string)
     additional_tags             = optional(map(string))
+    subnet_type                 = optional(string)
   }))
   default = {}
 }
