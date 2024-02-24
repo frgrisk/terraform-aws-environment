@@ -4,7 +4,7 @@ locals {
 
 module "spot_requests" {
   source  = "frgrisk/ec2-spot/aws"
-  version = "~>0.5.1"
+  version = "~>0.6.0"
 
   for_each = var.spot_requests
 
