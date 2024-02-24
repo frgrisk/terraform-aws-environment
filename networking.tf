@@ -61,7 +61,8 @@ resource "aws_route_table_association" "public" {
 }
 
 module "inter_environment_traffic" {
-  source = "terraform-aws-modules/security-group/aws"
+  source  = "terraform-aws-modules/security-group/aws"
+  version = "~>5.0"
 
   name        = "${var.tag_environment} inter-subnet traffic"
   description = "${var.tag_environment} inter-subnet traffic"
