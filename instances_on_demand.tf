@@ -21,7 +21,7 @@ module "on_demand_requests" {
   root_volume_size   = coalesce(each.value.root_volume_size, 30)
   additional_volumes = lookup(var.additional_volumes, each.key, {})
   encrypt_volumes    = var.encrypt_volumes
-  additional_tags    = merge(var.default_tags, each.value.additional_tags)
+  additional_tags    = merge(each.value.additional_tags, var.default_tags)
 
   user_data_replace_on_change = coalesce(each.value.user_data_replace_on_change, true)
 }
