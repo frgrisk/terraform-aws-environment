@@ -52,3 +52,13 @@ output "instance_ids_spot" {
   description = "List of instance IDs for spot instances"
   value       = { for name, instance in module.spot_requests : name => instance.instance_id }
 }
+
+output "reverse_dns_zone_name" {
+  description = "Reverse DNS zone name"
+  value       = aws_route53_zone.reverse.name
+}
+
+output "reverse_dns_zone_id" {
+  description = "Reverse DNS zone ID"
+  value       = aws_route53_zone.reverse.zone_id
+}
