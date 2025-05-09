@@ -60,7 +60,7 @@ resource "aws_route_table_association" "public" {
   subnet_id      = each.value.id
 }
 
-module "inter_environment_traffic" {
+module "intra_environment_traffic" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~>5.0"
 
@@ -72,4 +72,9 @@ module "inter_environment_traffic" {
 
   ingress_rules = ["all-all"]
   egress_rules  = ["all-all"]
+}
+
+moved {
+  from = module.inter_environment_traffic
+  to   = module.intra_environment_traffic
 }

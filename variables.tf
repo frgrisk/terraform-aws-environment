@@ -123,3 +123,9 @@ variable "encrypt_volumes" {
   type        = bool
   default     = true
 }
+
+variable "allow_intra_environment_traffic" {
+  description = "Automatically attach a security group to instances to allow intra-environment traffic"
+  type        = bool
+  default     = true
+}
