@@ -28,9 +28,14 @@ output "public_subnets_by_az" {
   value       = aws_subnet.public
 }
 
+output "intra_environment_security_group_id" {
+  description = "ID of the intra-environment security group"
+  value       = module.intra_environment_traffic.security_group_id
+}
+
 output "inter_environment_security_group_id" {
-  description = "ID of the inter-environment security group"
-  value       = module.inter_environment_traffic.security_group_id
+  description = "DEPRECATED: ID of the intra-environment security group (use intra_environment_security_group_id instead)"
+  value       = module.intra_environment_traffic.security_group_id
 }
 
 output "private_ip_addresses_on_demand" {
