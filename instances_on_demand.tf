@@ -1,6 +1,7 @@
 module "on_demand_requests" {
   source  = "frgrisk/ec2-instance/aws"
-  version = "~>0.4.0"
+  version = "~>0.5.0"
+  region  = var.region
 
   for_each = var.on_demand_requests
 
@@ -11,7 +12,7 @@ module "on_demand_requests" {
   placement_group      = each.value.placement_group
   security_group_ids = var.allow_intra_environment_traffic ? concat(
     each.value.security_group_ids,
-    [module.intra_environment_traffic.security_group_id],
+    [module.intra_environment_traffic.id],
   ) : each.value.security_group_ids
   subnet_id          = each.value.subnet_type == "public" ? aws_subnet.public[coalesce(each.value.availability_zone, local.default_az)].id : aws_subnet.private[coalesce(each.value.availability_zone, local.default_az)].id
   tag_environment    = var.tag_environment

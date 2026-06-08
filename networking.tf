@@ -62,16 +62,28 @@ resource "aws_route_table_association" "public" {
 
 module "intra_environment_traffic" {
   source  = "terraform-aws-modules/security-group/aws"
-  version = "~>5.0"
+  version = "~>6.0"
+  region  = var.region
 
   name        = "${var.tag_environment} inter-subnet traffic"
   description = "${var.tag_environment} inter-subnet traffic"
   vpc_id      = var.vpc_id
 
-  ingress_cidr_blocks = [var.environment_cidr]
+  ingress_rules = {
+    all = {
+      ip_protocol = "-1"
+      cidr_ipv4   = var.environment_cidr
+      description = "Allow all traffic between subnets in the environment"
+    }
+  }
 
-  ingress_rules = ["all-all"]
-  egress_rules  = ["all-all"]
+  egress_rules = {
+    all = {
+      ip_protocol = "-1"
+      cidr_ipv4   = "0.0.0.0/0"
+      description = "Allow all traffic to exit the environment"
+    }
+  }
 }
 
 moved {
