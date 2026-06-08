@@ -1,6 +1,7 @@
 resource "aws_backup_plan" "environment" {
-  name  = "${var.tag_environment}-backup-plan"
-  count = var.backup.enabled ? 1 : 0
+  region = var.region
+  name   = "${var.tag_environment}-backup-plan"
+  count  = var.backup.enabled ? 1 : 0
 
   rule {
     rule_name         = "${var.backup.retention}-day-retention"
@@ -18,14 +19,16 @@ resource "aws_backup_plan" "environment" {
 }
 
 resource "aws_backup_vault" "environment" {
-  count = var.backup.enabled ? 1 : 0
-  name  = "${var.tag_environment}-backup-vault"
+  region = var.region
+  count  = var.backup.enabled ? 1 : 0
+  name   = "${var.tag_environment}-backup-vault"
   tags = {
     Environment = var.tag_environment
   }
 }
 
 resource "aws_backup_selection" "environment" {
+  region       = var.region
   count        = var.backup.enabled ? 1 : 0
   iam_role_arn = aws_iam_role.backup[0].arn
   name         = "${var.tag_environment}-servers"

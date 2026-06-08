@@ -28,6 +28,7 @@ module "on_demand_requests" {
 }
 
 resource "aws_eip" "on_demand_requests" {
+  region   = var.region
   for_each = { for name, instance in var.on_demand_requests : name => coalesce(instance.hostname, "${name}-${var.tag_environment}.${var.route53_zone_name}") if instance.subnet_type == "public" }
 
   tags = {
@@ -38,6 +39,7 @@ resource "aws_eip" "on_demand_requests" {
 }
 
 resource "aws_eip_association" "on_demand_requests" {
+  region   = var.region
   for_each = { for name, instance in var.on_demand_requests : name => module.on_demand_requests[name] if instance.subnet_type == "public" }
 
   instance_id   = each.value.instance_id

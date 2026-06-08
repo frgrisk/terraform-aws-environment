@@ -10,21 +10,17 @@ locals {
   public_subnet_cidrs  = slice(local.all_subnets, local.number_of_subnets / 2, local.number_of_subnets)
 }
 
-data "aws_region" "current" {}
-
 data "aws_availability_zones" "region" {
+  region = var.region
+
   filter {
     name   = "opt-in-status"
     values = ["opt-in-not-required"]
   }
-
-  filter {
-    name   = "region-name"
-    values = [data.aws_region.current.name]
-  }
 }
 
 resource "aws_subnet" "private" {
+  region   = var.region
   for_each = toset(data.aws_availability_zones.region.names)
   tags = {
     Name        = "${var.tag_environment}-private-${each.key}"
@@ -36,6 +32,7 @@ resource "aws_subnet" "private" {
 }
 
 resource "aws_subnet" "public" {
+  region   = var.region
   for_each = toset(data.aws_availability_zones.region.names)
   tags = {
     Name        = "${var.tag_environment}-public-${each.key}"
@@ -47,6 +44,7 @@ resource "aws_subnet" "public" {
 }
 
 resource "aws_route_table_association" "private" {
+  region   = var.region
   for_each = aws_subnet.private
 
   route_table_id = var.private_route_table_id
@@ -54,6 +52,7 @@ resource "aws_route_table_association" "private" {
 }
 
 resource "aws_route_table_association" "public" {
+  region   = var.region
   for_each = aws_subnet.public
 
   route_table_id = var.public_route_table_id

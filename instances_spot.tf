@@ -32,6 +32,7 @@ module "spot_requests" {
 }
 
 resource "aws_eip" "spot_requests" {
+  region   = var.region
   for_each = { for name, instance in var.spot_requests : name => coalesce(instance.hostname, "${name}-${var.tag_environment}.${var.route53_zone_name}") if instance.subnet_type == "public" }
 
   tags = {
@@ -42,6 +43,7 @@ resource "aws_eip" "spot_requests" {
 }
 
 resource "aws_eip_association" "spot_requests" {
+  region   = var.region
   for_each = { for name, instance in var.spot_requests : name => module.spot_requests[name] if instance.subnet_type == "public" }
 
   instance_id   = each.value.instance_id
