@@ -68,6 +68,10 @@ module "intra_environment_traffic" {
   description = "${var.tag_environment} inter-subnet traffic"
   vpc_id      = var.vpc_id
 
+  tags = {
+    Name = "${var.tag_environment} inter-subnet traffic"
+  }
+
   ingress_rules = {
     all = {
       ip_protocol = "-1"
