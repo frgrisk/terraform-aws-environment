@@ -84,7 +84,7 @@ module "intra_environment_traffic" {
     all = {
       ip_protocol = "-1"
       cidr_ipv4   = "0.0.0.0/0"
-      description = "Allow all traffic to exit the environment"
+      description = "Allow all outbound traffic"
     }
   }
 }
