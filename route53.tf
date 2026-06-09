@@ -34,7 +34,8 @@ resource "aws_route53_zone" "reverse" {
   name = local.reverse_dns_zone
 
   vpc {
-    vpc_id = var.vpc_id
+    vpc_id     = var.vpc_id
+    vpc_region = var.region
   }
 
   tags = merge(var.default_tags, { Environment = var.tag_environment })
