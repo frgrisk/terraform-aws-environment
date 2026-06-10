@@ -4,7 +4,8 @@ locals {
 
 module "spot_requests" {
   source  = "frgrisk/ec2-spot/aws"
-  version = "~>0.6.0"
+  version = "~>0.7.0"
+  region  = var.region
 
   for_each = var.spot_requests
 
@@ -15,7 +16,7 @@ module "spot_requests" {
   placement_group      = each.value.placement_group
   security_group_ids = var.allow_intra_environment_traffic ? concat(
     each.value.security_group_ids,
-    [module.intra_environment_traffic.security_group_id],
+    [module.intra_environment_traffic.id],
   ) : each.value.security_group_ids
   subnet_id          = each.value.subnet_type == "public" ? aws_subnet.public[coalesce(each.value.availability_zone, local.default_az)].id : aws_subnet.private[coalesce(each.value.availability_zone, local.default_az)].id
   tag_environment    = var.tag_environment
@@ -31,6 +32,7 @@ module "spot_requests" {
 }
 
 resource "aws_eip" "spot_requests" {
+  region   = var.region
   for_each = { for name, instance in var.spot_requests : name => coalesce(instance.hostname, "${name}-${var.tag_environment}.${var.route53_zone_name}") if instance.subnet_type == "public" }
 
   tags = {
@@ -41,6 +43,7 @@ resource "aws_eip" "spot_requests" {
 }
 
 resource "aws_eip_association" "spot_requests" {
+  region   = var.region
   for_each = { for name, instance in var.spot_requests : name => module.spot_requests[name] if instance.subnet_type == "public" }
 
   instance_id   = each.value.instance_id

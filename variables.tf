@@ -129,3 +129,9 @@ variable "allow_intra_environment_traffic" {
   type        = bool
   default     = true
 }
+
+variable "region" {
+  description = "The AWS region to deploy into"
+  type        = string
+  default     = null
+}
