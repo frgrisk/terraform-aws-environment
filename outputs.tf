@@ -67,3 +67,33 @@ output "reverse_dns_zone_id" {
   description = "Reverse DNS zone ID"
   value       = aws_route53_zone.reverse.zone_id
 }
+
+output "backup_vault_name" {
+  description = "Name of the backup vault"
+  value       = one(aws_backup_vault.environment[*].name)
+}
+
+output "backup_vault_arn" {
+  description = "ARN of the backup vault"
+  value       = one(aws_backup_vault.environment[*].arn)
+}
+
+output "backup_plan_id" {
+  description = "ID of the backup plan"
+  value       = one(aws_backup_plan.environment[*].id)
+}
+
+output "backup_plan_arn" {
+  description = "ARN of the backup plan"
+  value       = one(aws_backup_plan.environment[*].arn)
+}
+
+output "backup_role_name" {
+  description = "Name of the IAM role used by AWS Backup"
+  value       = one(aws_iam_role.backup[*].name)
+}
+
+output "backup_role_arn" {
+  description = "ARN of the IAM role used by AWS Backup"
+  value       = one(aws_iam_role.backup[*].arn)
+}
