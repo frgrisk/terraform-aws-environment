@@ -43,8 +43,9 @@ variable "backup" {
   type = object({
     enabled = bool
     rules = optional(map(object({
-      schedule  = string
-      retention = number
+      schedule          = string
+      retention         = number
+      completion_window = optional(number)
     })), {})
   })
   default = {

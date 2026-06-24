@@ -8,6 +8,7 @@ resource "aws_backup_plan" "environment" {
       rule_name         = rule.key
       target_vault_name = aws_backup_vault.environment[0].name
       schedule          = rule.value.schedule
+      completion_window = rule.value.completion_window
 
       lifecycle {
         delete_after = rule.value.retention
