@@ -2,13 +2,17 @@ resource "aws_backup_plan" "environment" {
   name  = "${var.tag_environment}-backup-plan"
   count = var.backup.enabled ? 1 : 0
 
-  rule {
-    rule_name         = "${var.backup.retention}-day-retention"
-    target_vault_name = aws_backup_vault.environment[0].name
-    schedule          = var.backup.schedule
+  dynamic "rule" {
+    for_each = var.backup.rules
+    content {
+      rule_name         = rule.key
+      target_vault_name = aws_backup_vault.environment[0].name
+      schedule          = rule.value.schedule
+      completion_window = rule.value.completion_window
 
-    lifecycle {
-      delete_after = var.backup.retention
+      lifecycle {
+        delete_after = rule.value.retention
+      }
     }
   }
 

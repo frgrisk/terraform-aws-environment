@@ -41,22 +41,25 @@ variable "on_demand_requests" {
 variable "backup" {
   description = "Map of backup variables"
   type = object({
-    enabled   = bool
-    schedule  = optional(string)
-    retention = optional(number)
+    enabled = bool
+    rules = optional(map(object({
+      schedule          = string
+      retention         = number
+      completion_window = optional(number)
+    })), {})
   })
   default = {
     enabled = false
   }
 
   validation {
-    condition     = var.backup.enabled == true ? var.backup.schedule != null && var.backup.retention != null : true
-    error_message = "If backup is enabled, schedule and retention must be set"
+    condition     = var.backup.enabled == true ? length(var.backup.rules) > 0 : true
+    error_message = "If backup is enabled, at least one rule must be defined in rules"
   }
 
   validation {
-    condition     = var.backup.enabled == false ? var.backup.schedule == null && var.backup.retention == null : true
-    error_message = "If backup is disabled, schedule and retention must be null"
+    condition     = var.backup.enabled == false ? length(var.backup.rules) == 0 : true
+    error_message = "If backup is disabled, rules must be empty"
   }
 }
 
